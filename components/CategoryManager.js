@@ -31,9 +31,10 @@ function TagIcon() {
     );
 }
 
-export default function CategoryManager({ categories, onAddCategory, onDeleteCategory }) {
+export default function CategoryManager({ categories, onAddCategory, onDeleteCategory, theme }) {
     const [name, setName] = useState("");
     const [selectedColor, setSelectedColor] = useState(PRESET_COLORS[4]);
+    const isDark = theme === "dark";
 
     function handleAdd() {
         if (!name.trim()) return;
@@ -53,10 +54,13 @@ export default function CategoryManager({ categories, onAddCategory, onDeleteCat
     }
 
     return (
-        <div className="bg-white/5 backdrop-blur-md border border-white/10 shadow-lg rounded-xl p-6 space-y-4">
-            <div className="flex items-center gap-2 text-zinc-400">
+        <div className={`backdrop-blur-md rounded-xl p-6 space-y-4 ${isDark
+            ? "bg-white/5 border border-white/10 shadow-lg"
+            : "bg-white border border-gray-200 shadow-md"
+            }`}>
+            <div className={`flex items-center gap-2 ${isDark ? "text-zinc-400" : "text-gray-500"}`}>
                 <TagIcon />
-                <h2 className="text-lg font-semibold text-zinc-200">Categories</h2>
+                <h2 className={`text-lg font-semibold ${isDark ? "text-zinc-200" : "text-gray-800"}`}>Categories</h2>
             </div>
 
             <div className="flex flex-wrap items-end gap-3">
@@ -67,7 +71,10 @@ export default function CategoryManager({ categories, onAddCategory, onDeleteCat
                         value={name}
                         onChange={(e) => setName(e.target.value)}
                         onKeyDown={handleKeyDown}
-                        className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-2.5 text-sm text-zinc-100 placeholder-zinc-500 focus:outline-none focus:border-white/20 transition-colors"
+                        className={`w-full rounded-lg px-4 py-2.5 text-sm transition-colors focus:outline-none focus:ring-2 focus:ring-indigo-500 ${isDark
+                            ? "bg-white/5 border border-white/10 text-zinc-100 placeholder-zinc-500"
+                            : "bg-white border border-gray-200 text-gray-800 placeholder-gray-400"
+                            }`}
                     />
                 </div>
 
@@ -76,7 +83,9 @@ export default function CategoryManager({ categories, onAddCategory, onDeleteCat
                         <button
                             key={color}
                             onClick={() => setSelectedColor(color)}
-                            className={`w-6 h-6 rounded-full ${color} cursor-pointer transition-all ${selectedColor === color ? "ring-2 ring-white scale-110" : "ring-1 ring-white/20 hover:scale-105"
+                            className={`w-6 h-6 rounded-full ${color} cursor-pointer transition-all ${selectedColor === color
+                                ? "ring-2 ring-white scale-110"
+                                : "ring-1 ring-white/20 hover:scale-105"
                                 }`}
                         />
                     ))}

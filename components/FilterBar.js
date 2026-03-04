@@ -42,9 +42,14 @@ export default function FilterBar({
     priorityFilter,
     sortOption,
     onFilterChange,
+    theme,
 }) {
-    const selectClass =
-        "appearance-none bg-white/5 border border-white/10 rounded-lg pl-4 pr-10 py-2.5 text-sm text-zinc-100 focus:outline-none focus:border-white/20 transition-colors cursor-pointer";
+    const isDark = theme === "dark";
+
+    const selectClass = `appearance-none rounded-lg pl-4 pr-10 py-2.5 text-sm transition-colors cursor-pointer focus:outline-none focus:ring-2 focus:ring-indigo-500 ${isDark
+        ? "bg-white/5 border border-white/10 text-white"
+        : "bg-white border border-gray-300 text-gray-800"
+        }`;
 
     const hasActiveFilters = statusFilter !== "All" || priorityFilter !== "All";
 
@@ -63,73 +68,79 @@ export default function FilterBar({
 
     return (
         <div className="space-y-3">
-            <div className="bg-white/5 backdrop-blur-md border border-white/10 shadow-lg rounded-xl p-5 space-y-5">
-                {/* Filters Section */}
-                <div>
-                    <div className="flex items-center justify-between mb-3">
-                        <div className="flex items-center gap-2 text-zinc-400">
-                            <FilterIcon />
-                            <span className="text-xs font-medium uppercase tracking-wide">Filters</span>
+            <div className={`backdrop-blur-md rounded-xl p-5 ${isDark
+                ? "bg-white/5 border border-white/10 shadow-lg"
+                : "bg-white border border-gray-200 shadow-md"
+                }`}>
+                <div className="flex flex-col sm:flex-row gap-6 sm:gap-8">
+                    {/* Filters Section */}
+                    <div className="flex-1">
+                        <div className="flex items-center justify-between mb-3">
+                            <div className={`flex items-center gap-2 ${isDark ? "text-zinc-400" : "text-gray-500"}`}>
+                                <FilterIcon />
+                                <span className="text-xs font-medium uppercase tracking-wide">Filters</span>
+                            </div>
+                            {hasActiveFilters && (
+                                <button
+                                    onClick={clearAllFilters}
+                                    className={`text-xs transition-colors cursor-pointer ${isDark ? "text-zinc-500 hover:text-zinc-300" : "text-gray-400 hover:text-gray-600"
+                                        }`}
+                                >
+                                    Clear All
+                                </button>
+                            )}
                         </div>
-                        {hasActiveFilters && (
-                            <button
-                                onClick={clearAllFilters}
-                                className="text-xs text-zinc-500 hover:text-zinc-300 transition-colors cursor-pointer"
-                            >
-                                Clear All
-                            </button>
-                        )}
+                        <div className="flex flex-wrap gap-3">
+                            <div className="relative">
+                                <select
+                                    value={statusFilter}
+                                    onChange={(e) => onFilterChange("statusFilter", e.target.value)}
+                                    className={selectClass}
+                                >
+                                    <option value="All">All Status</option>
+                                    <option value="Completed">Completed</option>
+                                    <option value="Pending">Pending</option>
+                                </select>
+                                <ChevronIcon />
+                            </div>
+
+                            <div className="relative">
+                                <select
+                                    value={priorityFilter}
+                                    onChange={(e) => onFilterChange("priorityFilter", e.target.value)}
+                                    className={selectClass}
+                                >
+                                    <option value="All">All Priority</option>
+                                    <option value="Low">Low</option>
+                                    <option value="Medium">Medium</option>
+                                    <option value="High">High</option>
+                                </select>
+                                <ChevronIcon />
+                            </div>
+                        </div>
                     </div>
-                    <div className="flex flex-wrap gap-3">
-                        <div className="relative">
+
+                    {/* Separator - Horizontal on mobile, Vertical on larger screens */}
+                    <div className={`border-t sm:border-t-0 sm:border-l ${isDark ? "border-white/10" : "border-gray-200"}`} />
+
+                    {/* Sort Section */}
+                    <div className="sm:w-48 shrink-0">
+                        <div className={`flex items-center gap-2 mb-3 ${isDark ? "text-zinc-400" : "text-gray-500"}`}>
+                            <SortIcon />
+                            <span className="text-xs font-medium uppercase tracking-wide">Sort</span>
+                        </div>
+                        <div className="relative inline-block w-full">
                             <select
-                                value={statusFilter}
-                                onChange={(e) => onFilterChange("statusFilter", e.target.value)}
-                                className={selectClass}
+                                value={sortOption}
+                                onChange={(e) => onFilterChange("sortOption", e.target.value)}
+                                className={`${selectClass} w-full`}
                             >
-                                <option value="All">All Status</option>
-                                <option value="Completed">Completed</option>
-                                <option value="Pending">Pending</option>
+                                <option value="createdAt">Newest First</option>
+                                <option value="dueDate">Due Date</option>
+                                <option value="priority">Priority</option>
                             </select>
                             <ChevronIcon />
                         </div>
-
-                        <div className="relative">
-                            <select
-                                value={priorityFilter}
-                                onChange={(e) => onFilterChange("priorityFilter", e.target.value)}
-                                className={selectClass}
-                            >
-                                <option value="All">All Priority</option>
-                                <option value="Low">Low</option>
-                                <option value="Medium">Medium</option>
-                                <option value="High">High</option>
-                            </select>
-                            <ChevronIcon />
-                        </div>
-                    </div>
-                </div>
-
-                {/* Separator */}
-                <div className="border-t border-white/10" />
-
-                {/* Sort Section */}
-                <div>
-                    <div className="flex items-center gap-2 text-zinc-400 mb-3">
-                        <SortIcon />
-                        <span className="text-xs font-medium uppercase tracking-wide">Sort</span>
-                    </div>
-                    <div className="relative inline-block">
-                        <select
-                            value={sortOption}
-                            onChange={(e) => onFilterChange("sortOption", e.target.value)}
-                            className={selectClass}
-                        >
-                            <option value="createdAt">Newest First</option>
-                            <option value="dueDate">Due Date</option>
-                            <option value="priority">Priority</option>
-                        </select>
-                        <ChevronIcon />
                     </div>
                 </div>
             </div>
@@ -141,7 +152,10 @@ export default function FilterBar({
                         <button
                             key={tag.key}
                             onClick={() => onFilterChange(tag.key, "All")}
-                            className="flex items-center gap-1.5 bg-white/10 hover:bg-white/15 text-sm text-zinc-300 rounded-full px-3 py-1 transition-colors cursor-pointer"
+                            className={`flex items-center gap-1.5 text-sm rounded-full px-3 py-1 transition-colors cursor-pointer ${isDark
+                                ? "bg-white/10 hover:bg-white/15 text-zinc-300"
+                                : "bg-indigo-50 hover:bg-indigo-100 text-indigo-700"
+                                }`}
                         >
                             <span>{tag.label}</span>
                             <CloseIcon />

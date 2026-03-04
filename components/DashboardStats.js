@@ -30,7 +30,8 @@ function AlertIcon() {
     );
 }
 
-export default function DashboardStats({ tasks }) {
+export default function DashboardStats({ tasks, theme }) {
+    const isDark = theme === "dark";
     const total = tasks.length;
     const completed = tasks.filter((t) => t.completed).length;
     const highPriority = tasks.filter((t) => t.priority === "High").length;
@@ -48,10 +49,13 @@ export default function DashboardStats({ tasks }) {
                 {stats.map((stat) => (
                     <div
                         key={stat.label}
-                        className="bg-white/5 backdrop-blur-md border border-white/10 shadow-lg rounded-xl p-5 transition-transform duration-200 hover:scale-[1.02]"
+                        className={`rounded-xl p-5 transition-transform duration-200 hover:scale-[1.02] ${isDark
+                            ? "bg-white/5 backdrop-blur-md border border-white/10 shadow-lg"
+                            : "bg-white border border-gray-200 shadow-md"
+                            }`}
                     >
                         <div className="flex items-center justify-between">
-                            <p className="text-sm text-zinc-400">{stat.label}</p>
+                            <p className={`text-sm ${isDark ? "text-zinc-400" : "text-gray-500"}`}>{stat.label}</p>
                             <span className={stat.color}>{stat.icon}</span>
                         </div>
                         <p className={`text-3xl font-bold mt-2 ${stat.color}`}>
@@ -61,15 +65,17 @@ export default function DashboardStats({ tasks }) {
                 ))}
             </div>
 
-            {/* Progress bar */}
-            <div className="bg-white/5 backdrop-blur-md border border-white/10 shadow-lg rounded-xl p-5">
+            <div className={`rounded-xl p-5 ${isDark
+                ? "bg-white/5 backdrop-blur-md border border-white/10 shadow-lg"
+                : "bg-white border border-gray-200 shadow-md"
+                }`}>
                 <div className="flex justify-between items-center mb-2">
-                    <p className="text-sm text-zinc-400">Overall Progress</p>
-                    <p className="text-sm font-medium text-zinc-300">{progress}%</p>
+                    <p className={`text-sm ${isDark ? "text-zinc-400" : "text-gray-500"}`}>Overall Progress</p>
+                    <p className={`text-sm font-medium ${isDark ? "text-zinc-300" : "text-gray-700"}`}>{progress}%</p>
                 </div>
-                <div className="w-full h-3 bg-zinc-800/50 rounded-full overflow-hidden">
+                <div className={`w-full h-3 rounded-full overflow-hidden ${isDark ? "bg-zinc-800/50" : "bg-gray-200"}`}>
                     <div
-                        className="h-full rounded-full bg-gradient-to-r from-indigo-500 to-purple-500 transition-all duration-500 ease-out"
+                        className="h-full rounded-full bg-gradient-to-r from-indigo-500 to-purple-500 transition-all duration-700 ease-out"
                         style={{ width: `${progress}%` }}
                     />
                 </div>

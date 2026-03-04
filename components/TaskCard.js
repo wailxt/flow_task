@@ -41,44 +41,65 @@ function UndoIcon() {
     );
 }
 
-// Map Tailwind bg class to border-l class
 function getCategoryBorderClass(bgColor) {
     if (!bgColor) return "border-l-zinc-700";
     return bgColor.replace("bg-", "border-l-");
 }
 
-export default function TaskCard({ task, onToggleComplete, onDeleteTask }) {
+function getDueDateStatus(dueDate) {
+    if (!dueDate) return null;
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const due = new Date(dueDate + "T00:00:00");
+    const tomorrow = new Date(today);
+    tomorrow.setDate(tomorrow.getDate() + 1);
+
+    if (due < today) return "overdue";
+    if (due.getTime() === tomorrow.getTime()) return "soon";
+    return null;
+}
+
+export default function TaskCard({ task, onToggleComplete, onDeleteTask, theme }) {
+    const isDark = theme === "dark";
     const borderClass = task.category
         ? getCategoryBorderClass(task.category.color)
-        : "border-l-zinc-700";
+        : isDark ? "border-l-zinc-700" : "border-l-gray-300";
+
+    const dueDateStatus = getDueDateStatus(task.dueDate);
 
     return (
         <div
-            className={`bg-white/5 backdrop-blur-md border border-white/10 shadow-lg border-l-4 ${borderClass} rounded-xl p-4 transition-all duration-200 hover:bg-white/[0.08] ${task.completed ? "opacity-60" : ""
-                }`}
+            className={`border-l-4 ${borderClass} rounded-xl p-4 transition-all duration-200 ${isDark
+                ? "bg-white/5 backdrop-blur-md border border-white/10 shadow-lg hover:bg-white/[0.08]"
+                : "bg-white border border-gray-200 shadow-md hover:bg-gray-50"
+                } ${task.completed ? "opacity-60" : ""} hover:scale-[1.01]`}
         >
             <div className="flex items-start justify-between gap-4">
                 <div className="flex-1 min-w-0">
                     <h3
-                        className={`text-lg font-semibold text-zinc-100 ${task.completed ? "line-through text-zinc-500" : ""
+                        className={`text-lg font-semibold ${task.completed
+                            ? "line-through text-zinc-500"
+                            : isDark
+                                ? "text-zinc-100"
+                                : "text-gray-800"
                             }`}
                     >
                         {task.title}
                     </h3>
 
                     {task.description && (
-                        <p className="text-sm text-zinc-400 mt-1">{task.description}</p>
+                        <p className={`text-sm mt-1 ${isDark ? "text-zinc-400" : "text-gray-500"}`}>
+                            {task.description}
+                        </p>
                     )}
 
                     <div className="flex flex-wrap items-center gap-2 mt-3">
-                        {/* Priority badge */}
                         <span
                             className={`text-xs font-medium px-2.5 py-1 rounded-full ${priorityColors[task.priority]}`}
                         >
                             {task.priority}
                         </span>
 
-                        {/* Category badge */}
                         {task.category && (
                             <span
                                 className={`${task.category.color} text-white text-xs font-medium px-2.5 py-1 rounded-full`}
@@ -87,17 +108,27 @@ export default function TaskCard({ task, onToggleComplete, onDeleteTask }) {
                             </span>
                         )}
 
-                        {/* Due date */}
                         {task.dueDate && (
-                            <span className="flex items-center gap-1 text-xs text-zinc-500">
+                            <span className={`flex items-center gap-1 text-xs ${isDark ? "text-zinc-500" : "text-gray-500"}`}>
                                 <ClockIcon />
                                 {task.dueDate}
                             </span>
                         )}
 
-                        {/* Status */}
+                        {dueDateStatus === "overdue" && !task.completed && (
+                            <span className="text-xs font-medium px-2 py-0.5 rounded-full bg-red-500/20 text-red-400 border border-red-500/30">
+                                Overdue
+                            </span>
+                        )}
+
+                        {dueDateStatus === "soon" && !task.completed && (
+                            <span className="text-xs font-medium px-2 py-0.5 rounded-full bg-yellow-500/20 text-yellow-400">
+                                Due Soon
+                            </span>
+                        )}
+
                         <span
-                            className={`text-xs font-medium ${task.completed ? "text-emerald-400" : "text-zinc-500"
+                            className={`text-xs font-medium ${task.completed ? "text-emerald-400" : isDark ? "text-zinc-500" : "text-gray-400"
                                 }`}
                         >
                             {task.completed ? "Completed" : "Pending"}
@@ -110,8 +141,10 @@ export default function TaskCard({ task, onToggleComplete, onDeleteTask }) {
                         onClick={() => onToggleComplete(task.id)}
                         title={task.completed ? "Undo" : "Complete"}
                         className={`p-2 rounded-lg transition-colors cursor-pointer ${task.completed
+                            ? isDark
                                 ? "text-zinc-400 hover:bg-white/10 hover:text-zinc-200"
-                                : "text-emerald-400 hover:bg-emerald-600/20"
+                                : "text-gray-400 hover:bg-gray-100 hover:text-gray-600"
+                            : "text-emerald-400 hover:bg-emerald-600/20"
                             }`}
                     >
                         {task.completed ? <UndoIcon /> : <CheckIcon />}
