@@ -42,8 +42,8 @@ export default function Home() {
     <main className="min-h-screen bg-zinc-950">
       <div className="max-w-5xl mx-auto p-6 space-y-8">
         {/* Header */}
-        <div className="pt-4">
-          <h1 className="text-3xl font-bold text-zinc-100">flow_task</h1>
+        <div className="pt-6">
+          <h1 className="text-4xl font-bold text-zinc-100">flow_task</h1>
           <p className="text-sm text-zinc-500 mt-1">Organize your focus.</p>
         </div>
 
@@ -64,6 +64,7 @@ export default function Home() {
         {/* Task List */}
         <TaskList
           tasks={visibleTasks}
+          totalCount={tasks.length}
           onToggleComplete={toggleComplete}
           onDeleteTask={deleteTask}
         />
