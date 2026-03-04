@@ -44,7 +44,7 @@ export default function FilterBar({
     onFilterChange,
 }) {
     const selectClass =
-        "appearance-none bg-zinc-800 border border-zinc-700 rounded-lg pl-4 pr-10 py-2.5 text-sm text-zinc-100 focus:outline-none focus:border-zinc-500 transition-colors cursor-pointer";
+        "appearance-none bg-white/5 border border-white/10 rounded-lg pl-4 pr-10 py-2.5 text-sm text-zinc-100 focus:outline-none focus:border-white/20 transition-colors cursor-pointer";
 
     const hasActiveFilters = statusFilter !== "All" || priorityFilter !== "All";
 
@@ -63,7 +63,7 @@ export default function FilterBar({
 
     return (
         <div className="space-y-3">
-            <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-5 space-y-5">
+            <div className="bg-white/5 backdrop-blur-md border border-white/10 shadow-lg rounded-xl p-5 space-y-5">
                 {/* Filters Section */}
                 <div>
                     <div className="flex items-center justify-between mb-3">
@@ -111,7 +111,7 @@ export default function FilterBar({
                 </div>
 
                 {/* Separator */}
-                <div className="border-t border-zinc-800" />
+                <div className="border-t border-white/10" />
 
                 {/* Sort Section */}
                 <div>
@@ -141,7 +141,7 @@ export default function FilterBar({
                         <button
                             key={tag.key}
                             onClick={() => onFilterChange(tag.key, "All")}
-                            className="flex items-center gap-1.5 bg-zinc-800 hover:bg-zinc-700 text-sm text-zinc-300 rounded-full px-3 py-1 transition-colors cursor-pointer"
+                            className="flex items-center gap-1.5 bg-white/10 hover:bg-white/15 text-sm text-zinc-300 rounded-full px-3 py-1 transition-colors cursor-pointer"
                         >
                             <span>{tag.label}</span>
                             <CloseIcon />

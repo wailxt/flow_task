@@ -6,12 +6,6 @@ const priorityColors = {
     High: "bg-red-500/20 text-red-400",
 };
 
-const priorityBorders = {
-    Low: "border-l-emerald-500",
-    Medium: "border-l-yellow-500",
-    High: "border-l-red-500",
-};
-
 function ClockIcon() {
     return (
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="shrink-0">
@@ -47,10 +41,20 @@ function UndoIcon() {
     );
 }
 
+// Map Tailwind bg class to border-l class
+function getCategoryBorderClass(bgColor) {
+    if (!bgColor) return "border-l-zinc-700";
+    return bgColor.replace("bg-", "border-l-");
+}
+
 export default function TaskCard({ task, onToggleComplete, onDeleteTask }) {
+    const borderClass = task.category
+        ? getCategoryBorderClass(task.category.color)
+        : "border-l-zinc-700";
+
     return (
         <div
-            className={`bg-zinc-900 border border-zinc-800 border-l-4 ${priorityBorders[task.priority]} rounded-xl p-4 transition-all duration-200 hover:bg-zinc-800/80 ${task.completed ? "opacity-60" : ""
+            className={`bg-white/5 backdrop-blur-md border border-white/10 shadow-lg border-l-4 ${borderClass} rounded-xl p-4 transition-all duration-200 hover:bg-white/[0.08] ${task.completed ? "opacity-60" : ""
                 }`}
         >
             <div className="flex items-start justify-between gap-4">
@@ -74,10 +78,12 @@ export default function TaskCard({ task, onToggleComplete, onDeleteTask }) {
                             {task.priority}
                         </span>
 
-                        {/* Category */}
+                        {/* Category badge */}
                         {task.category && (
-                            <span className="text-xs text-zinc-500 bg-zinc-800 px-2.5 py-1 rounded-full">
-                                {task.category}
+                            <span
+                                className={`${task.category.color} text-white text-xs font-medium px-2.5 py-1 rounded-full`}
+                            >
+                                {task.category.name}
                             </span>
                         )}
 
@@ -104,7 +110,7 @@ export default function TaskCard({ task, onToggleComplete, onDeleteTask }) {
                         onClick={() => onToggleComplete(task.id)}
                         title={task.completed ? "Undo" : "Complete"}
                         className={`p-2 rounded-lg transition-colors cursor-pointer ${task.completed
-                                ? "text-zinc-400 hover:bg-zinc-700 hover:text-zinc-200"
+                                ? "text-zinc-400 hover:bg-white/10 hover:text-zinc-200"
                                 : "text-emerald-400 hover:bg-emerald-600/20"
                             }`}
                     >

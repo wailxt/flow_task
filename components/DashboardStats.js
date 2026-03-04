@@ -48,7 +48,7 @@ export default function DashboardStats({ tasks }) {
                 {stats.map((stat) => (
                     <div
                         key={stat.label}
-                        className="bg-zinc-900 border border-zinc-800 rounded-xl p-5 transition-transform duration-200 hover:scale-[1.02]"
+                        className="bg-white/5 backdrop-blur-md border border-white/10 shadow-lg rounded-xl p-5 transition-transform duration-200 hover:scale-[1.02]"
                     >
                         <div className="flex items-center justify-between">
                             <p className="text-sm text-zinc-400">{stat.label}</p>
@@ -62,14 +62,14 @@ export default function DashboardStats({ tasks }) {
             </div>
 
             {/* Progress bar */}
-            <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-5">
+            <div className="bg-white/5 backdrop-blur-md border border-white/10 shadow-lg rounded-xl p-5">
                 <div className="flex justify-between items-center mb-2">
                     <p className="text-sm text-zinc-400">Overall Progress</p>
                     <p className="text-sm font-medium text-zinc-300">{progress}%</p>
                 </div>
-                <div className="w-full h-3 bg-zinc-800 rounded-full overflow-hidden">
+                <div className="w-full h-3 bg-zinc-800/50 rounded-full overflow-hidden">
                     <div
-                        className="h-full rounded-full bg-linear-to-r from-indigo-500 to-purple-500 transition-all duration-500 ease-out"
+                        className="h-full rounded-full bg-gradient-to-r from-indigo-500 to-purple-500 transition-all duration-500 ease-out"
                         style={{ width: `${progress}%` }}
                     />
                 </div>
