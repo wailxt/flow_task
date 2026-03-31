@@ -21,6 +21,15 @@ export default function Home() {
     if (saved) setTheme(saved);
   }, []);
 
+  // Sync .dark class on <html> so Shadcn CSS variables respond to theme
+  useEffect(() => {
+    if (theme === "dark") {
+      document.documentElement.classList.add("dark");
+    } else {
+      document.documentElement.classList.remove("dark");
+    }
+  }, [theme]);
+
   // Auto-hide toast after 2.5s
   useEffect(() => {
     if (toast) {

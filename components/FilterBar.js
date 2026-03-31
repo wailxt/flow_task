@@ -1,5 +1,13 @@
 "use client";
 
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuRadioGroup,
+    DropdownMenuRadioItem,
+    DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+
 function FilterIcon() {
     return (
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -91,32 +99,38 @@ export default function FilterBar({
                             )}
                         </div>
                         <div className="flex flex-wrap gap-3">
-                            <div className="relative">
-                                <select
-                                    value={statusFilter}
-                                    onChange={(e) => onFilterChange("statusFilter", e.target.value)}
-                                    className={selectClass}
-                                >
-                                    <option value="All">All Status</option>
-                                    <option value="Completed">Completed</option>
-                                    <option value="Pending">Pending</option>
-                                </select>
-                                <ChevronIcon />
-                            </div>
+                            <DropdownMenu>
+                                <DropdownMenuTrigger asChild>
+                                    <button className={`${selectClass} relative w-[140px] text-left pr-10 block`}>
+                                        <span className="block truncate">{statusFilter === "All" ? "All Status" : statusFilter}</span>
+                                        <ChevronIcon />
+                                    </button>
+                                </DropdownMenuTrigger>
+                                <DropdownMenuContent className="w-[140px]">
+                                    <DropdownMenuRadioGroup value={statusFilter} onValueChange={(val) => onFilterChange("statusFilter", val)}>
+                                        <DropdownMenuRadioItem value="All">All Status</DropdownMenuRadioItem>
+                                        <DropdownMenuRadioItem value="Completed">Completed</DropdownMenuRadioItem>
+                                        <DropdownMenuRadioItem value="Pending">Pending</DropdownMenuRadioItem>
+                                    </DropdownMenuRadioGroup>
+                                </DropdownMenuContent>
+                            </DropdownMenu>
 
-                            <div className="relative">
-                                <select
-                                    value={priorityFilter}
-                                    onChange={(e) => onFilterChange("priorityFilter", e.target.value)}
-                                    className={selectClass}
-                                >
-                                    <option value="All">All Priority</option>
-                                    <option value="Low">Low</option>
-                                    <option value="Medium">Medium</option>
-                                    <option value="High">High</option>
-                                </select>
-                                <ChevronIcon />
-                            </div>
+                            <DropdownMenu>
+                                <DropdownMenuTrigger asChild>
+                                    <button className={`${selectClass} relative w-[140px] text-left pr-10 block`}>
+                                        <span className="block truncate">{priorityFilter === "All" ? "All Priority" : priorityFilter}</span>
+                                        <ChevronIcon />
+                                    </button>
+                                </DropdownMenuTrigger>
+                                <DropdownMenuContent className="w-[140px]">
+                                    <DropdownMenuRadioGroup value={priorityFilter} onValueChange={(val) => onFilterChange("priorityFilter", val)}>
+                                        <DropdownMenuRadioItem value="All">All Priority</DropdownMenuRadioItem>
+                                        <DropdownMenuRadioItem value="Low">Low</DropdownMenuRadioItem>
+                                        <DropdownMenuRadioItem value="Medium">Medium</DropdownMenuRadioItem>
+                                        <DropdownMenuRadioItem value="High">High</DropdownMenuRadioItem>
+                                    </DropdownMenuRadioGroup>
+                                </DropdownMenuContent>
+                            </DropdownMenu>
                         </div>
                     </div>
 
@@ -129,18 +143,25 @@ export default function FilterBar({
                             <SortIcon />
                             <span className="text-xs font-medium uppercase tracking-wide">Sort</span>
                         </div>
-                        <div className="relative inline-block w-full">
-                            <select
-                                value={sortOption}
-                                onChange={(e) => onFilterChange("sortOption", e.target.value)}
-                                className={`${selectClass} w-full`}
-                            >
-                                <option value="createdAt">Newest First</option>
-                                <option value="dueDate">Due Date</option>
-                                <option value="priority">Priority</option>
-                            </select>
-                            <ChevronIcon />
-                        </div>
+                        <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                                <button className={`${selectClass} w-full text-left relative block pr-10`}>
+                                    <span className="block truncate">
+                                        {sortOption === "createdAt" && "Newest First"}
+                                        {sortOption === "dueDate" && "Due Date"}
+                                        {sortOption === "priority" && "Priority"}
+                                    </span>
+                                    <ChevronIcon />
+                                </button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent className="w-[190px]">
+                                <DropdownMenuRadioGroup value={sortOption} onValueChange={(val) => onFilterChange("sortOption", val)}>
+                                    <DropdownMenuRadioItem value="createdAt">Newest First</DropdownMenuRadioItem>
+                                    <DropdownMenuRadioItem value="dueDate">Due Date</DropdownMenuRadioItem>
+                                    <DropdownMenuRadioItem value="priority">Priority</DropdownMenuRadioItem>
+                                </DropdownMenuRadioGroup>
+                            </DropdownMenuContent>
+                        </DropdownMenu>
                     </div>
                 </div>
             </div>

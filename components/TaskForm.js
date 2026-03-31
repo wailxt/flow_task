@@ -1,6 +1,21 @@
 "use client";
 
 import { useState } from "react";
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuRadioGroup,
+    DropdownMenuRadioItem,
+    DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+
+function ChevronIcon() {
+    return (
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-zinc-400">
+            <polyline points="6 9 12 15 18 9" />
+        </svg>
+    );
+}
 
 const initialForm = {
     title: "",
@@ -96,33 +111,53 @@ export default function TaskForm({ onAddTask, categories, theme }) {
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 <div className="flex flex-col items-center w-full space-y-2">
                     <label className={centerLabelClass}>Priority</label>
-                    <select
-                        name="priority"
-                        value={form.priority}
-                        onChange={handleChange}
-                        className={selectClass}
-                    >
-                        <option value="Low">Low</option>
-                        <option value="Medium">Medium</option>
-                        <option value="High">High</option>
-                    </select>
+                    <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                            <button className={`${selectClass} w-full text-left relative pr-10`} type="button">
+                                <span className="block truncate">{form.priority}</span>
+                                <ChevronIcon />
+                            </button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent className="w-[var(--radix-dropdown-menu-trigger-width)] min-w-[8rem]">
+                            <DropdownMenuRadioGroup 
+                                value={form.priority} 
+                                onValueChange={(val) => setForm({ ...form, priority: val })}
+                            >
+                                <DropdownMenuRadioItem value="Low">Low</DropdownMenuRadioItem>
+                                <DropdownMenuRadioItem value="Medium">Medium</DropdownMenuRadioItem>
+                                <DropdownMenuRadioItem value="High">High</DropdownMenuRadioItem>
+                            </DropdownMenuRadioGroup>
+                        </DropdownMenuContent>
+                    </DropdownMenu>
                 </div>
 
                 <div className="flex flex-col items-center w-full space-y-2">
                     <label className={centerLabelClass}>Category</label>
-                    <select
-                        name="categoryId"
-                        value={form.categoryId}
-                        onChange={handleChange}
-                        className={selectClass}
-                    >
-                        <option value="">No Category</option>
-                        {categories.map((cat) => (
-                            <option key={cat.id} value={cat.id}>
-                                {cat.name}
-                            </option>
-                        ))}
-                    </select>
+                    <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                            <button className={`${selectClass} w-full text-left relative pr-10`} type="button">
+                                <span className="block truncate">
+                                    {form.categoryId 
+                                        ? categories?.find(c => c.id.toString() === form.categoryId?.toString())?.name || "Unknown Category"
+                                        : "No Category"}
+                                </span>
+                                <ChevronIcon />
+                            </button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent className="w-[var(--radix-dropdown-menu-trigger-width)] min-w-[8rem]">
+                            <DropdownMenuRadioGroup 
+                                value={form.categoryId?.toString()} 
+                                onValueChange={(val) => setForm({ ...form, categoryId: val })}
+                            >
+                                <DropdownMenuRadioItem value="">No Category</DropdownMenuRadioItem>
+                                {categories?.map((cat) => (
+                                    <DropdownMenuRadioItem key={cat.id} value={cat.id.toString()}>
+                                        {cat.name}
+                                    </DropdownMenuRadioItem>
+                                ))}
+                            </DropdownMenuRadioGroup>
+                        </DropdownMenuContent>
+                    </DropdownMenu>
                 </div>
 
                 <div className="flex flex-col items-center w-full space-y-2">
