@@ -449,9 +449,13 @@ export default function Home() {
         </main>
 
         {/* Footer */}
-        <footer className="w-full bg-[#0b0a1a] text-white py-8 mt-auto border-t border-white/[0.05] flex flex-col items-center justify-center gap-2">
+        <footer className={`w-full py-8 mt-auto border-t flex flex-col items-center justify-center gap-2 ${
+          isDark 
+            ? "bg-[#0b0a1a] text-white border-white/[0.05]" 
+            : "bg-slate-100 text-slate-800 border-slate-300"
+        }`}>
           <p className="text-sm font-medium tracking-wide">© 2026 WAIL KTITU</p>
-          <p className="text-xs text-slate-400">Designed and developed by Wail</p>
+          <p className={`text-xs ${isDark ? "text-slate-400" : "text-slate-500"}`}>Designed and developed by Wail</p>
         </footer>
       </div>
 
