@@ -1,61 +1,57 @@
 "use client";
 
-import TaskCard from "./TaskCard";
+import TaskCard from "@/components/TaskCard";
 
-function ClipboardIcon() {
-    return (
-        <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" className="text-zinc-600">
-            <path d="M16 4h2a2 2 0 012 2v14a2 2 0 01-2 2H6a2 2 0 01-2-2V6a2 2 0 012-2h2" />
-            <rect x="8" y="2" width="8" height="4" rx="1" ry="1" />
-            <line x1="9" y1="12" x2="15" y2="12" />
-            <line x1="9" y1="16" x2="13" y2="16" />
-        </svg>
-    );
+function EmptyIcon() {
+  return (
+    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/>
+    </svg>
+  );
 }
 
 export default function TaskList({ tasks, totalCount, onToggleComplete, onDeleteTask, theme }) {
-    const isDark = theme === "dark";
+  const isDark = theme === "dark";
+  const isEmpty = tasks.length === 0;
+  const isFiltered = tasks.length < totalCount;
 
-    if (tasks.length === 0) {
-        return (
-            <div>
-                {totalCount > 0 && (
-                    <p className={`text-sm mb-4 ${isDark ? "text-zinc-400" : "text-gray-500"}`}>
-                        Showing 0 of {totalCount} tasks
-                    </p>
-                )}
-                <div className="relative flex flex-col items-center justify-center py-20 animate-[fadeIn_0.4s_ease-out]">
-                    <div className="absolute w-32 h-32 bg-indigo-500/10 rounded-full blur-2xl" />
-                    <div className="relative">
-                        <ClipboardIcon />
-                    </div>
-                    <h3 className={`text-lg font-semibold mt-4 ${isDark ? "text-zinc-400" : "text-gray-500"}`}>
-                        No tasks yet
-                    </h3>
-                    <p className={`text-sm mt-1 text-center max-w-xs ${isDark ? "text-zinc-500" : "text-gray-400"}`}>
-                        Start by adding your first task and organize your flow.
-                    </p>
-                </div>
-            </div>
-        );
-    }
+  return (
+    <div className="space-y-2.5">
+      {/* Header row */}
+      <div className="flex items-center justify-between">
+        <p className={`text-xs font-semibold uppercase tracking-wide ${isDark ? "text-zinc-600" : "text-slate-500"}`}>
+          {isFiltered ? `Showing ${tasks.length} of ${totalCount}` : `${totalCount} task${totalCount !== 1 ? "s" : ""}`}
+        </p>
+      </div>
 
-    return (
-        <div>
-            <p className={`text-sm mb-4 ${isDark ? "text-zinc-400" : "text-gray-500"}`}>
-                Showing {tasks.length} of {totalCount} tasks
+      {/* Task cards */}
+      {isEmpty ? (
+        <div className={`flex flex-col items-center justify-center gap-3 py-14 rounded-2xl ${isDark ? "bg-white/[0.02] border border-white/[0.05]" : "bg-slate-50 border border-slate-200"}`}>
+          <span className={`${isDark ? "text-zinc-700" : "text-gray-300"}`}>
+            <EmptyIcon />
+          </span>
+          <div className="text-center">
+            <p className={`text-sm font-medium ${isDark ? "text-zinc-500" : "text-slate-500"}`}>
+              {isFiltered ? "No tasks match your filters" : "No tasks yet"}
             </p>
-            <div className="space-y-3">
-                {tasks.map((task) => (
-                    <TaskCard
-                        key={task.id}
-                        task={task}
-                        onToggleComplete={onToggleComplete}
-                        onDeleteTask={onDeleteTask}
-                        theme={theme}
-                    />
-                ))}
-            </div>
+            <p className={`text-xs mt-0.5 ${isDark ? "text-zinc-700" : "text-gray-300"}`}>
+              {isFiltered ? "Try clearing filters" : "Add a task to get started"}
+            </p>
+          </div>
         </div>
-    );
+      ) : (
+        <div className="space-y-2">
+          {tasks.map((task) => (
+            <TaskCard
+              key={task.id}
+              task={task}
+              onToggleComplete={onToggleComplete}
+              onDeleteTask={onDeleteTask}
+              theme={theme}
+            />
+          ))}
+        </div>
+      )}
+    </div>
+  );
 }

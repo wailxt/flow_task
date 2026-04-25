@@ -3,120 +3,108 @@
 import { useState } from "react";
 
 const PRESET_COLORS = [
-    "bg-red-500",
-    "bg-orange-500",
-    "bg-yellow-500",
-    "bg-green-500",
-    "bg-blue-500",
-    "bg-indigo-500",
-    "bg-purple-500",
-    "bg-pink-500",
+  "bg-red-500", "bg-orange-500", "bg-amber-500", "bg-green-500",
+  "bg-blue-500", "bg-indigo-500", "bg-purple-500", "bg-pink-500",
 ];
 
 function CloseIcon() {
-    return (
-        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-            <line x1="18" y1="6" x2="6" y2="18" />
-            <line x1="6" y1="6" x2="18" y2="18" />
-        </svg>
-    );
+  return (
+    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3.5" strokeLinecap="round" strokeLinejoin="round">
+      <line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" />
+    </svg>
+  );
 }
-
-function TagIcon() {
-    return (
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83 0L2 12V2h10l8.59 8.59a2 2 0 010 2.82z" />
-            <line x1="7" y1="7" x2="7.01" y2="7" />
-        </svg>
-    );
+function PlusIcon() {
+  return (
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3.5" strokeLinecap="round" strokeLinejoin="round">
+      <line x1="12" y1="5" x2="12" y2="19" /><line x1="5" y1="12" x2="19" y2="12" />
+    </svg>
+  );
 }
 
 export default function CategoryManager({ categories, onAddCategory, onDeleteCategory, theme }) {
-    const [name, setName] = useState("");
-    const [selectedColor, setSelectedColor] = useState(PRESET_COLORS[4]);
-    const isDark = theme === "dark";
+  const [name, setName] = useState("");
+  const [selectedColor, setSelectedColor] = useState(PRESET_COLORS[4]);
+  const isDark = theme === "dark";
 
-    function handleAdd() {
-        if (!name.trim()) return;
-        onAddCategory({
-            id: Date.now(),
-            name: name.trim(),
-            color: selectedColor,
-        });
-        setName("");
-    }
+  function handleAdd() {
+    if (!name.trim()) return;
+    onAddCategory({ id: Date.now(), name: name.trim(), color: selectedColor });
+    setName("");
+  }
 
-    function handleKeyDown(e) {
-        if (e.key === "Enter") {
-            e.preventDefault();
-            handleAdd();
-        }
-    }
+  const card = isDark
+    ? "bg-white/[0.03] border border-white/[0.07]"
+    : "bg-white border border-slate-300 shadow-sm shadow-slate-200/50";
 
-    return (
-        <div className={`backdrop-blur-md rounded-xl p-6 space-y-4 ${isDark
-            ? "bg-white/5 border border-white/10 shadow-lg"
-            : "bg-white border border-gray-200 shadow-md"
-            }`}>
-            <div className={`flex items-center gap-2 ${isDark ? "text-zinc-400" : "text-gray-500"}`}>
-                <TagIcon />
-                <h2 className={`text-lg font-semibold ${isDark ? "text-zinc-200" : "text-gray-800"}`}>Categories</h2>
-            </div>
+  const inputClass = `flex-1 min-w-0 rounded-xl px-4 py-2 text-sm outline-none transition-all
+    focus:ring-2 focus:ring-indigo-500/50
+    ${isDark
+      ? "bg-white/[0.04] border border-white/[0.07] text-zinc-100 placeholder-zinc-600 focus:bg-white/[0.07]"
+      : "bg-slate-50 border border-slate-300 text-slate-900 placeholder-gray-400 focus:bg-white focus:border-indigo-400"
+    }`;
 
-            <div className="flex flex-wrap items-end gap-3">
-                <div className="flex-1 min-w-[180px]">
-                    <input
-                        type="text"
-                        placeholder="Category name"
-                        value={name}
-                        onChange={(e) => setName(e.target.value)}
-                        onKeyDown={handleKeyDown}
-                        className={`w-full rounded-lg px-4 py-2.5 text-sm transition-colors focus:outline-none focus:ring-2 focus:ring-indigo-500 ${isDark
-                            ? "bg-white/5 border border-white/10 text-zinc-100 placeholder-zinc-500"
-                            : "bg-white border border-gray-200 text-gray-800 placeholder-gray-400"
-                            }`}
-                    />
-                </div>
+  return (
+    <div className={`rounded-2xl p-5 ${card}`}>
+      <h3 className={`text-sm font-semibold mb-4 ${isDark ? "text-zinc-200" : "text-slate-800"}`}>
+        Categories
+      </h3>
 
-                <div className="flex items-center gap-1.5">
-                    {PRESET_COLORS.map((color) => (
-                        <button
-                            key={color}
-                            onClick={() => setSelectedColor(color)}
-                            className={`w-6 h-6 rounded-full ${color} cursor-pointer transition-all ${selectedColor === color
-                                ? "ring-2 ring-white scale-110"
-                                : "ring-1 ring-white/20 hover:scale-105"
-                                }`}
-                        />
-                    ))}
-                </div>
+      {/* Add form */}
+      <div className="flex flex-wrap items-center gap-2 mb-4">
+        <input
+          type="text"
+          placeholder="Category name"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          onKeyDown={(e) => e.key === "Enter" && (e.preventDefault(), handleAdd())}
+          className={inputClass}
+        />
 
-                <button
-                    onClick={handleAdd}
-                    className="bg-indigo-600 hover:bg-indigo-500 text-white text-sm font-medium px-4 py-2.5 rounded-lg transition-colors cursor-pointer"
-                >
-                    Add
-                </button>
-            </div>
-
-            {categories.length > 0 && (
-                <div className="flex flex-wrap gap-2 pt-1">
-                    {categories.map((cat) => (
-                        <span
-                            key={cat.id}
-                            className={`${cat.color} text-white text-xs font-medium rounded-full px-3 py-1 flex items-center gap-1.5`}
-                        >
-                            {cat.name}
-                            <button
-                                onClick={() => onDeleteCategory(cat.id)}
-                                className="hover:opacity-70 cursor-pointer"
-                            >
-                                <CloseIcon />
-                            </button>
-                        </span>
-                    ))}
-                </div>
-            )}
+        {/* Color swatches */}
+        <div className="flex items-center gap-1.5 shrink-0">
+          {PRESET_COLORS.map((color) => (
+            <button
+              key={color}
+              onClick={() => setSelectedColor(color)}
+              className={`w-5 h-5 rounded-full cursor-pointer transition-all ${color}
+                ${selectedColor === color ? "ring-2 ring-offset-1 ring-white/80 scale-110" : "hover:scale-105 opacity-70 hover:opacity-100"}
+                ${isDark ? "ring-offset-[#0c0e14]" : "ring-offset-white"}`}
+            />
+          ))}
         </div>
-    );
+
+        <button
+          onClick={handleAdd}
+          className="flex items-center gap-1.5 px-3.5 py-2 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white text-xs font-semibold rounded-xl transition-all cursor-pointer shrink-0 shadow-md shadow-indigo-500/20"
+        >
+          <PlusIcon />Add
+        </button>
+      </div>
+
+      {/* Category chips */}
+      {categories.length > 0 ? (
+        <div className="flex flex-wrap gap-2">
+          {categories.map((cat) => (
+            <span
+              key={cat.id}
+              className={`${cat.color} text-white text-xs font-medium rounded-full px-3 py-1.5 flex items-center gap-1.5 shadow-sm`}
+            >
+              {cat.name}
+              <button
+                onClick={() => onDeleteCategory(cat.id)}
+                className="hover:opacity-70 cursor-pointer transition-opacity"
+              >
+                <CloseIcon />
+              </button>
+            </span>
+          ))}
+        </div>
+      ) : (
+        <p className={`text-xs ${isDark ? "text-zinc-600" : "text-slate-500"}`}>
+          No categories yet. Add one above.
+        </p>
+      )}
+    </div>
+  );
 }
